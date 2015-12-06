@@ -1,6 +1,7 @@
-/**
- * 
+/*
+ * Copyright (C) 2015 The Piramid by ThunderboltLei
  */
+
 package com.bfd.monitor.utils;
 
 import java.io.IOException;
@@ -9,21 +10,23 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
- * @author lm8212
+ * @author: lm8212<br>
+ * @description: 加载系统配置信息<br>
  *
  */
 public class ConfigUtils {
 
-	private static Logger logger = Logger.getLogger(ConfigUtils.class);
-
-	private static Properties configProp;
+	// 日志
+	private static final Logger logger = Logger.getLogger(ConfigUtils.class);
+	// 读取系统配置信息
+	private static Properties configProps;
 
 	static {
-		configProp = new Properties();
+		configProps = new Properties();
 
 		try {
-			configProp.load(logger.getClass().getClassLoader().getResourceAsStream(
-					"config.properties"));
+			configProps.load(logger.getClass().getClassLoader()
+					.getResourceAsStream("config.properties"));
 		} catch (IOException e) {
 			logger.error(e.fillInStackTrace());
 		}

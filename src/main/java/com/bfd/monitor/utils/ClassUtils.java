@@ -1,6 +1,7 @@
-/**
- * 
+/*
+ * Copyright (C) 2015 The Piramid by ThunderboltLei
  */
+
 package com.bfd.monitor.utils;
 
 import java.lang.reflect.Array;
@@ -11,12 +12,15 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
- * 
- * @author lm8212
- *
+ * @author: lm8212
+ * @description:
  */
 public class ClassUtils {
+
+	private static final Logger logger = Logger.getLogger(ClassUtils.class);
 
 	public static final String ARRAY_SUFFIX = "[]";
 
@@ -135,6 +139,13 @@ public class ClassUtils {
 				.size()]);
 	}
 
+	/**
+	 * 获取所有接口
+	 * 
+	 * @param clazz
+	 * @param excludes
+	 * @return
+	 */
 	public static Class[] getInterfaces(Class clazz, String excludes[]) {
 		List interfaces = new ArrayList();
 		interfaces = getAllInterfacesExclude(clazz, excludes, interfaces);
@@ -142,6 +153,15 @@ public class ClassUtils {
 				.size()]);
 	}
 
+	/**
+	 * 获取所有方法
+	 * 
+	 * @param clz
+	 * @param methodName
+	 * @param expectedTypes
+	 * @return
+	 * @throws NoSuchMethodException
+	 */
 	public static Method getMethod(Class clz, String methodName,
 			Class expectedTypes[]) throws NoSuchMethodException {
 		Method method = null;
@@ -173,6 +193,12 @@ public class ClassUtils {
 		return method;
 	}
 
+	/**
+	 * 只获取类的名字
+	 * 
+	 * @param clazz
+	 * @return
+	 */
 	public static String getShortName(Class clazz) {
 		return getShortName(clazz.getName());
 	}
@@ -193,6 +219,14 @@ public class ClassUtils {
 		return new String(charArray, lastDot, charArray.length - lastDot);
 	}
 
+	/**
+	 * 获取静态方法
+	 * 
+	 * @param clazz
+	 * @param methodName
+	 * @param args
+	 * @return
+	 */
 	public static Method getStaticMethod(Class clazz, String methodName,
 			Class args[]) {
 		try {
@@ -291,18 +325,19 @@ public class ClassUtils {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
 	public static boolean isAssignableFrom(Class original,
 			Class checkedClasses[]) {
-		if (checkedClasses == null)
+		if (checkedClasses == null) {
 			return false;
-		for (int i = 0; i < checkedClasses.length; i++)
-			if (original.isAssignableFrom(checkedClasses[i]))
+		}
+		for (int i = 0; i < checkedClasses.length; i++) {
+			if (original.isAssignableFrom(checkedClasses[i])) {
 				return true;
-
+			}
+		}
 		return false;
 	}
 
@@ -314,7 +349,6 @@ public class ClassUtils {
 				if (clazz.getName().equals(name))
 					return clazz;
 			}
-
 		}
 		if (name.endsWith("[]")) {
 			String elementClassName = name.substring(0,
