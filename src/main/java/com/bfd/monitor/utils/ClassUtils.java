@@ -34,9 +34,15 @@ public class ClassUtils {
 	private static Class PRIMITIVE_CLASSES[];
 
 	static {
-		PRIMITIVE_CLASSES = (new Class[] { Boolean.TYPE, Byte.TYPE,
-				Character.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE,
-				Float.TYPE, Double.TYPE });
+		PRIMITIVE_CLASSES = new Class[] { Boolean.TYPE, // Boolean
+				Byte.TYPE, // Byte
+				Character.TYPE, // Character
+				Short.TYPE, // Short
+				Integer.TYPE, // Integer
+				Long.TYPE, // Long
+				Float.TYPE, // Float
+				Double.TYPE // Double
+		};
 	}
 
 	public static String addResourcePathToPackagePath(Class clazz,
