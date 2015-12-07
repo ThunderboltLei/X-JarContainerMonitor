@@ -108,7 +108,6 @@ public class ClassUtils {
 					}
 				}
 			}
-
 		} catch (Throwable thr) {
 			String msg = (new StringBuilder())
 					.append("Class: ")
