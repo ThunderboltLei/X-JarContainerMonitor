@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 /**
  * @author: lm8212<br>
  * @description: 加载系统配置信息<br>
- *
  */
 public class ConfigUtils {
 

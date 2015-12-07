@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
  */
 public class ClassUtils {
 
+	// 日志
 	private static final Logger logger = Logger.getLogger(ClassUtils.class);
 
 	public static final String ARRAY_SUFFIX = "[]";
