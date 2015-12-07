@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author: lm8212
- * @description:
+ * @description: 类信息的读取工具类
  */
 public class ClassUtils {
 
