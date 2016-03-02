@@ -2,7 +2,7 @@
  * Copyright (C) 2015 The Piramid by ThunderboltLei
  */
 
-package com.bfd.monitor.zk;
+package com.bfd.monitor.zk.t01;
 
 import java.io.IOException;
 
@@ -45,11 +45,11 @@ public class AbstractZookeeper implements Watcher {
 	 */
 	@Override
 	public void process(WatchedEvent event) {
-		// TODO Auto-generated method stub
-		if (event.getState() == KeeperState.SyncConnected) {
-			countDownLatch.countDown();
-			logger.info(countDownLatch.getCount());
-		}
+		// if (event.getState() == KeeperState.SyncConnected) {
+		countDownLatch.countDown();
+		logger.info(countDownLatch.getCount());
+		logger.info("Event: " + event.getType());
+		// }
 	}
 
 	public void close() throws InterruptedException {

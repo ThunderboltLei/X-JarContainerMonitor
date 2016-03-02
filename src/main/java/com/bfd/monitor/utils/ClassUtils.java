@@ -130,11 +130,9 @@ public class ClassUtils {
 	public static ClassLoader getContextClassLoader() {
 		return (ClassLoader) AccessController
 				.doPrivileged(new PrivilegedAction() {
-
 					public ClassLoader run() {
 						return Thread.currentThread().getContextClassLoader();
 					}
-
 				});
 	}
 

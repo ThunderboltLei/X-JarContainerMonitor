@@ -2,14 +2,18 @@
  * Copyright (C) 2015 The Piramid by ThunderboltLei
  */
 
-package com.bfd.monitor.zk;
+package com.bfd.monitor.zk.t01;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs.Ids;
+import org.apache.zookeeper.data.Stat;
 
 /**
  * @author: lm8212
@@ -17,8 +21,10 @@ import org.apache.zookeeper.ZooDefs.Ids;
  */
 public class ZookeeperOperator extends AbstractZookeeper {
 
-	private static final Logger logger = Logger
+	private final static Logger logger = Logger
 			.getLogger(ZookeeperOperator.class.getName());
+	
+	private final static String PATH = "/test01/data";
 
 	/**
 	 * 
@@ -67,41 +73,70 @@ public class ZookeeperOperator extends AbstractZookeeper {
 		}
 	}
 
+	/**
+	 * 
+	 * @param path
+	 * @return
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */
 	public byte[] getData(String path) throws KeeperException,
 			InterruptedException {
 		return this.zooKeeper.getData(path, false, null);
 	}
 
-	public static void main(String[] args) {
+	public boolean delete(String path) {
 		try {
+			Stat stat = this.zooKeeper.exists(path, true);
+			if (null != stat) {
+				logger.info(1111);
+				this.zooKeeper.delete(path, -1);
+			} else {
+				logger.info(2222);
+			}
+			return true;
+		} catch (Exception e) {
+			logger.error(e);
+			return false;
+		}
+	}
+
+	public static void main(String[] args) {
+
+		String json = "{\"a\":1, \"b\":2, \"c\":3, \"d\":4}";
+
+		try {
+
 			ZookeeperOperator zkoperator = new ZookeeperOperator();
-			zkoperator.connect("hadoop-master");
+			zkoperator.connect("ThunderboltLei");
 
-			logger.info(new String(zkoperator.getData("/user/root/test01")));
+			// logger.info(new String(zkoperator.getData("/test01")));
 
-			byte[] data = new byte[] { 'a', 'b', 'c', 'd' };
+			zkoperator.create("/test01", null);
+			
+			zkoperator.delete(PATH);
 
-			// zkoperator.create("/root",null);
-			// System.out.println(Arrays.toString(zkoperator.getData("/root")));
+			zkoperator.create(PATH, json.getBytes());
+			logger.info(Arrays.toString(zkoperator.getData(PATH)));
 			//
 			// zkoperator.create("/root/child1",data);
-			// System.out.println(Arrays.toString(zkoperator.getData("/root/child1")));
+			// logger.info(Arrays.toString(zkoperator.getData("/root/child1")));
 			//
 			// zkoperator.create("/root/child2",data);
-			// System.out.println(Arrays.toString(zkoperator.getData("/root/child2")));
+			// logger.info(Arrays.toString(zkoperator.getData("/root/child2")));
 
 			// String zktest = "ZooKeeper的Java API测试";
 			// zkoperator.create("/user/root/test03", zktest.getBytes());
 			// logger.debug("获取设置的信息："
 			// + new String(zkoperator.getData("/user/root")));
 
-			System.out.println("节点孩子信息:");
-			zkoperator.getChild("/user/root/test01");
+			logger.info("节点孩子信息:");
+			zkoperator.getChild(PATH);
 
 			zkoperator.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 
 	}
