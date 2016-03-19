@@ -4,6 +4,7 @@
 
 package com.bfd.monitor.zk.t04;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.curator.RetryPolicy;
@@ -15,15 +16,37 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.EnsurePath;
+import org.apache.log4j.Logger;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooDefs.Ids;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
 
 /**
  * @author: Thunderbolt.Lei<br>
  * @description: <br>
  */
 public class ChildrenListener {
-	
+
+	private final static Logger logger = Logger
+			.getLogger(ChildrenListener.class);
+
 	private static final String C_PATH = "/test01";
 	private static final String CHARSET = "UTF-8";
+
+	public void addInfo(String serviceName, String info) {
+		try {
+			ZooKeeper zk = new ZooKeeper("ThunderboltLei:2181", 3000, null);
+			Stat stat = zk.exists("/test01" + serviceName, null);
+			if (null != stat)
+				zk.delete("/test01/", -1);
+			zk.create("/test01/" + serviceName, info.getBytes(),
+					Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
 
 	public static void main(String[] args) {
 		try {
@@ -52,26 +75,24 @@ public class ChildrenListener {
 											CuratorFramework client,
 											PathChildrenCacheEvent event)
 											throws Exception {
-										System.out
-												.println("================== catch children change ==================");
-										System.out.println("==="
-												+ event.getType() + ","
+										logger.info("----- catch children [ "
 												+ event.getData().getPath()
+												+ " ] change -----");
+										logger.info("--- " + event.getType()
 												+ ","
 												+ event.getData().getData());
 										List<ChildData> childDataList = pathChildrenCache
 												.getCurrentData();
 										if (childDataList != null
 												&& childDataList.size() > 0) {
-											System.out
-													.println("===all children as:");
+											logger.info("--- all children as:");
 											for (ChildData childData : childDataList) {
-												System.out.println("=="
+												logger.info("--- "
 														+ childData.getPath()
 														+ ","
 														+ new String(childData
 																.getData(),
-																"UTF-8"));
+																getCharset()));
 											}
 										}
 									}
@@ -81,12 +102,12 @@ public class ChildrenListener {
 						Thread.sleep(Integer.MAX_VALUE);
 						client.close();
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e);
 					}
 				}
 			}).start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 
